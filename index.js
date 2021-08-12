@@ -1,13 +1,18 @@
 // Таймер
+
+
+
 const timer = {
   start() {
-    const startTime = new Date('Jul 17, 2019');
+    const startTime = new Date('Aug 24, 2021');
 
     setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = currentTime - startTime;
-      const { days, hours, mins, secs } = getTimeComponents(deltaTime);
-      console.log(`${days}:${hours}:${mins}:${secs}`);
+      const deltaTime = startTime - currentTime;
+      const time = getTimeComponents(deltaTime);
+      updateTimer(time);
+
+      // console.log(`${days}:${hours}:${mins}:${secs}`);
     }, 1000);
   },
 };
@@ -46,3 +51,9 @@ function getTimeComponents(time) {
 
   return { days, hours, mins, secs };
 };
+
+function updateTimer({ days, hours, mins, secs }) {
+  selectorForTimer.textContent = `${days}:${hours}:${mins}:${secs}`;
+};
+
+const selectorForTimer = document.querySelector('#timer-1');
