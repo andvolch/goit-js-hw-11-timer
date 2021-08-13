@@ -1,59 +1,61 @@
 // Таймер
+const refs = {
+  timerElement: document.querySelector('#timer-1'),
+  days: document.querySelector('[data-value="days"]'),
+  hours: document.querySelector('[data-value="hours"]'),
+  minutes: document.querySelector('[data-value="mins"]'),
+  seconds: document.querySelector('[data-value="secs"]'),
+};
 
+class CountdownTimer {
+  constructor({ selector, targetDate }) {
+    this.selector = selector;
+    this.targetDate = targetDate;
+    this.timerId = null;
+    this.start();
+  }
 
-
-const timer = {
+  
   start() {
-    const startTime = new Date('Aug 24, 2021');
-
-    setInterval(() => {
+    this.startTime = setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = startTime - currentTime;
-      const time = getTimeComponents(deltaTime);
-      updateTimer(time);
+      const deltaTime = this.targetDate - currentTime;
+      const time = this.getTimeComponents(deltaTime);
+      // this.updateTimer(time);
 
-      // console.log(`${days}:${hours}:${mins}:${secs}`);
+      
     }, 1000);
-  },
+  }
+
+  pad(value) {
+    return String(value).padStart(2, '0');
+  }
+  
+  getTimeComponents(time) {
+  
+    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+
+    refs.days.textContent = `${days}`;
+    refs.hours.textContent = `${hours}`;
+    refs.minutes.textContent = `${mins}`;
+    refs.seconds.textContent = `${secs}`;
+  }
+
+  // updateTimer(time) {
+  //   refs.timerElement.textContent = `${days}:${hours}:${mins}:${secs}`;
+    
+  // }
+
 };
 
-timer.start();
 
-function pad(value) {
-  return String(value).padStart(2, '0');
-};
 
-function getTimeComponents(time) {
-  /*
- * Оставшиеся дни: делим значение UTC на 1000 * 60 * 60 * 24, количество
- * миллисекунд в одном дне (миллисекунды * секунды * минуты * часы)
- */
-  const days = pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date('Aug 24, 2021'),
+});
 
-/*
- * Оставшиеся часы: получаем остаток от предыдущего расчета с помощью оператора
- * остатка % и делим его на количество миллисекунд в одном часе
- * (1000 * 60 * 60 = миллисекунды * минуты * секунды)
- */
-  const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
 
-/*
- * Оставшиеся минуты: получаем оставшиеся минуты и делим их на количество
- * миллисекунд в одной минуте (1000 * 60 = миллисекунды * секунды)
- */
-  const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-
-/*
- * Оставшиеся секунды: получаем оставшиеся секунды и делим их на количество
- * миллисекунд в одной секунде (1000)
- */
-  const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
-
-  return { days, hours, mins, secs };
-};
-
-function updateTimer({ days, hours, mins, secs }) {
-  selectorForTimer.textContent = `${days}:${hours}:${mins}:${secs}`;
-};
-
-const selectorForTimer = document.querySelector('#timer-1');
